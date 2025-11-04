@@ -10,16 +10,41 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     'LXFOPVEFRNHR'
     """
     ciphertext = ""
-    arr =[]
-    alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U",
-                "V", "W", "X", "Y", "Z"]
-    newshiftarr =[]
+    arr = []
+    alphabet = [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+        "N",
+        "O",
+        "P",
+        "Q",
+        "R",
+        "S",
+        "T",
+        "U",
+        "V",
+        "W",
+        "X",
+        "Y",
+        "Z",
+    ]
+    newshiftarr = []
     newshift = 0
-
 
     if len(plaintext) > len(keyword):
         for i in range(len(plaintext) // len(keyword)):
-            newkeyword = keyword + keyword[0:len(plaintext) - len(keyword)]
+            newkeyword = keyword + keyword[0 : len(plaintext) - len(keyword)]
             keyword = newkeyword
 
     for char in keyword:
@@ -39,31 +64,28 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
                     a = newshiftarr[i] - newshiftarr[i] % 26
                 a = abs(90 - (ord(char) + newshiftarr[i]))
                 arr.append(chr(65 + a - 1))
-                i =i+1
+                i = i + 1
             else:
                 arr.append(chr(ord(char) + newshiftarr[i]))
-                i = i+1
+                i = i + 1
 
-        elif char.islower() ==True:
+        elif char.islower() == True:
             if (122 - ord(char)) < newshiftarr[i]:
                 if newshiftarr[i] > 26:
                     a = newshiftarr[i] - newshiftarr[i] % 26
                 a = abs(122 - (ord(char) + newshiftarr[i]))
                 arr.append(chr(97 + a - 1))
-                i = i+1
+                i = i + 1
             else:
                 arr.append(chr(ord(char) + newshiftarr[i]))
-                i =i+1
-
+                i = i + 1
 
         else:
             arr.append(char)
-            i +=1
+            i += 1
 
-    ciphertext = ''.join(arr)
+    ciphertext = "".join(arr)
     return ciphertext
-
-
 
 
 def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
@@ -83,7 +105,7 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
 
     if len(ciphertext) > len(keyword):
         for i in range(len(ciphertext) // len(keyword)):
-            newkeyword = keyword + keyword[0:len(ciphertext) - len(keyword)]
+            newkeyword = keyword + keyword[0 : len(ciphertext) - len(keyword)]
             keyword = newkeyword
 
     for char in keyword:
@@ -95,7 +117,7 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
         newshiftarr.append(newshift)
 
     arr = []
-    i =0
+    i = 0
     for char in ciphertext:
         if 65 <= ord(char) <= 90:
             if abs(65 - ord(char)) < newshiftarr[i]:
@@ -120,6 +142,6 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
                 i = i + 1
         else:
             arr.append(char)
-            i =i+1
-    plaintext = ''.join(arr)
+            i = i + 1
+    plaintext = "".join(arr)
     return plaintext
