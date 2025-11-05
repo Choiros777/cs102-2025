@@ -20,6 +20,5 @@ def encrypt_atbash(plaintext):
 
     return ciphertext
 
-print(encrypt_atbash("aazz"))
 
 
