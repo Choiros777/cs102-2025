@@ -1,4 +1,3 @@
-
 def encrypt_atbash(plaintext):
     ciphertext = ""
     arr = []
@@ -19,6 +18,3 @@ def encrypt_atbash(plaintext):
     ciphertext = "".join(arr)
 
     return ciphertext
-
-
-
