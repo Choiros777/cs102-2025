@@ -1,15 +1,15 @@
 
 def encrypt_atbash(plaintext):
-    ciphertext = ''
+    ciphertext = ""
     arr = []
-    i=0
+    i = 0
     for char in plaintext:
 
-        if char.isupper() == True: #90-65
+        if char.isupper() == True:
             charnumber = int(26 - (ord(char) - 64) + 1)
-            arr.append(chr(64+charnumber))
+            arr.append(chr(64 + charnumber))
 
-        elif char.islower() == True: #122-97
+        elif char.islower() == True:
             charnumber = int(26 - (ord(char) - 96) + 1)
             arr.append(chr(96 + charnumber))
         else:
@@ -20,6 +20,4 @@ def encrypt_atbash(plaintext):
 
     return ciphertext
 
-
-print(encrypt_atbash("zzzaaa"))
 
