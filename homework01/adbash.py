@@ -7,7 +7,6 @@ def encrypt_atbash(plaintext):
         if char.isupper() == True:
             charnumber = int(26 - (ord(char) - 64) + 1)
             arr.append(chr(64 + charnumber))
-
         elif char.islower() == True:
             charnumber = int(26 - (ord(char) - 96) + 1)
             arr.append(chr(96 + charnumber))
