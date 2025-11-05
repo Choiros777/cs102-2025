@@ -23,4 +23,3 @@ def encrypt_atbash(plaintext):
 
 print(encrypt_atbash("zzzaaa"))
 print(encrypt_atbash("NOON"))
-print(encrypt_atbash("Gr8"))
