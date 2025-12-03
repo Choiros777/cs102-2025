@@ -1,19 +1,23 @@
 def encrypt_atbash(plaintext):
     ciphertext = ""
-    arr = []
-    i = 0
     for char in plaintext:
-
-        if char.isupper() == True:
-            charnumber = int(26 - (ord(char) - 64) + 1)
-            arr.append(chr(64 + charnumber))
-        elif char.islower() == True:
-            charnumber = int(26 - (ord(char) - 96) + 1)
-            arr.append(chr(96 + charnumber))
+        if char.isupper():
+            if ord(char) < 77:
+                ciphertext += chr(77 + (78 - ord(char)))
+            if ord(char) > 77:
+                ciphertext += chr(77 - (ord(char) - 78))
+            if ord(char) == 77:
+                ciphertext += 'N'
+        elif char.islower():
+            if ord(char) < 109:
+                ciphertext += chr(109 + (110 - ord(char)))
+            if ord(char) > 109:
+                ciphertext += chr(109 - (ord(char) - 110))
+            if ord(char) == 109:
+                ciphertext += 'n'
         else:
-            arr.append(char)
-            i += 1
+            ciphertext += char
+    return  ciphertext
 
-    ciphertext = "".join(arr)
 
-    return ciphertext
+print(encrypt_atbash("AAAAAAZZZZMqecui*(*&^%$aaaaaaaaaaa"))

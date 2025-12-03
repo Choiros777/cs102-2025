@@ -12,12 +12,10 @@ def is_prime(n: int) -> bool:
     >>> is_prime(8)
     False
     """
-    if n <= 1:
+    if n <= 1 or (n > 2 and n % 2 == 0):
         return False
     if n == 2:
         return True
-    if n % 2 == 0:
-        return False
 
     for i in range(3, int(math.sqrt(n)) + 1, 2):
         if n % i == 0:
@@ -44,15 +42,20 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     23
     """
 
-    def extendedgcd(a, b):
-        if a == 0:
-            return b, 0, 1
-        gcd, x1, y1 = extendedgcd(b % a, a)
-        x = y1 - (b // a) * x1
-        y = x1
-        return gcd, x, y
+    def extended_gcd_iterative(a, b):
+        """Расширенный алгоритм Евклида без рекурсии"""
+        x0, x1, y0, y1 = 1, 0, 0, 1
 
-    gcd, x, y = extendedgcd(e, phi)
+        while b != 0:
+            q = a // b
+            a, b = b, a % b
+            x0, x1 = x1, x0 - q * x1
+            y0, y1 = y1, y0 - q * y1
+
+
+        return a, x0, y0
+
+    gcd, x, y = extended_gcd_iterative(e, phi)
 
     d = x % phi
     return d

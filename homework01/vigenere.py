@@ -11,41 +11,18 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     """
     ciphertext = ""
     arr = []
-    alphabet = [
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G",
-        "H",
-        "I",
-        "J",
-        "K",
-        "L",
-        "M",
-        "N",
-        "O",
-        "P",
-        "Q",
-        "R",
-        "S",
-        "T",
-        "U",
-        "V",
-        "W",
-        "X",
-        "Y",
-        "Z",
-    ]
+
     newshiftarr = []
     newshift = 0
 
+    # if len(plaintext) > len(keyword):
+    #     for i in range(len(plaintext) // len(keyword)):
+    #         newkeyword = keyword + keyword[0 : len(plaintext) - len(keyword)]
+    #         keyword = newkeyword
+
     if len(plaintext) > len(keyword):
-        for i in range(len(plaintext) // len(keyword)):
-            newkeyword = keyword + keyword[0 : len(plaintext) - len(keyword)]
-            keyword = newkeyword
+        multiplier = (len(plaintext) + len(keyword) - 1) // len(keyword)
+        keyword = (keyword * multiplier)
 
     for char in keyword:
         if char.isupper() == True:
@@ -125,10 +102,10 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
                     a = newshiftarr[i] - newshiftarr[i] % 26
                 a = abs(65 - (ord(char) - newshiftarr[i]))
                 arr.append(chr(90 - a + 1))
-                i = i + 1
+
             else:
                 arr.append(chr(ord(char) - newshiftarr[i]))
-                i = i + 1
+            i = i + 1
 
         elif 97 <= ord(char) <= 122:
             if abs(97 - ord(char)) < newshiftarr[i]:
