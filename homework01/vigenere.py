@@ -22,7 +22,7 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
 
     if len(plaintext) > len(keyword):
         multiplier = (len(plaintext) + len(keyword) - 1) // len(keyword)
-        keyword = (keyword * multiplier)
+        keyword = keyword * multiplier
 
     for char in keyword:
         if char.isupper() == True:

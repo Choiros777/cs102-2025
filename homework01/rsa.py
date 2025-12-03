@@ -52,7 +52,6 @@ def multiplicative_inverse(e: int, phi: int) -> int:
             x0, x1 = x1, x0 - q * x1
             y0, y1 = y1, y0 - q * y1
 
-
         return a, x0, y0
 
     gcd, x, y = extended_gcd_iterative(e, phi)
