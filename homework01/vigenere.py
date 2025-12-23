@@ -15,10 +15,10 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     newshiftarr = []
     newshift = 0
 
-    # if len(plaintext) > len(keyword):
-    #     for i in range(len(plaintext) // len(keyword)):
-    #         newkeyword = keyword + keyword[0 : len(plaintext) - len(keyword)]
-    #         keyword = newkeyword
+    ordbiga = 65
+    ordsmalla = 97
+    alphlen = 26
+
 
     if len(plaintext) > len(keyword):
         multiplier = (len(plaintext) + len(keyword) - 1) // len(keyword)
@@ -26,9 +26,9 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
 
     for char in keyword:
         if char.isupper() == True:
-            newshift = ord(char) - 65
+            newshift = ord(char) - ordbiga
         if char.islower() == True:
-            newshift = ord(char) - 97
+            newshift = ord(char) - ordsmalla
 
         newshiftarr.append(newshift)
 
@@ -37,35 +37,41 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     for char in plaintext:
         if char.isupper() == True:
             if (90 - ord(char)) < newshiftarr[i]:
-                if newshiftarr[i] > 26:
-                    a = newshiftarr[i] - newshiftarr[i] % 26
+                if newshiftarr[i] > alphlen:
+                    a = newshiftarr[i] - newshiftarr[i] % alphlen
                 a = abs(90 - (ord(char) + newshiftarr[i]))
-                arr.append(chr(65 + a - 1))
-                i = i + 1
+                arr.append(chr(ordbiga + a - 1))
+
             else:
                 arr.append(chr(ord(char) + newshiftarr[i]))
-                i = i + 1
+
 
         elif char.islower() == True:
             if (122 - ord(char)) < newshiftarr[i]:
-                if newshiftarr[i] > 26:
-                    a = newshiftarr[i] - newshiftarr[i] % 26
+                if newshiftarr[i] > alphlen:
+                    a = newshiftarr[i] - newshiftarr[i] % alphlen
                 a = abs(122 - (ord(char) + newshiftarr[i]))
-                arr.append(chr(97 + a - 1))
-                i = i + 1
+                arr.append(chr(ordsmalla + a - 1))
+
             else:
                 arr.append(chr(ord(char) + newshiftarr[i]))
-                i = i + 1
+
 
         else:
             arr.append(char)
-            i += 1
+        i += 1
 
     ciphertext = "".join(arr)
     return ciphertext
 
 
 def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
+
+    ordbiga = 65
+    ordsmalla = 97
+    alphlen = 26
+
+
     """
     Decrypts a ciphertext using a Vigenere cipher.
 
@@ -86,39 +92,40 @@ def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
             keyword = newkeyword
 
     for char in keyword:
-        if char.isupper() == True:
-            newshift = ord(char) - 65
-        if char.islower() == True:
-            newshift = ord(char) - 97
+        if char.isupper():
+            newshift = ord(char) - ordbiga
+        if char.islower():
+            newshift = ord(char) - ordsmalla
 
         newshiftarr.append(newshift)
 
     arr = []
-    i = 0
+    indchar = 0
     for char in ciphertext:
-        if 65 <= ord(char) <= 90:
-            if abs(65 - ord(char)) < newshiftarr[i]:
-                if newshiftarr[i] > 26:
-                    a = newshiftarr[i] - newshiftarr[i] % 26
-                a = abs(65 - (ord(char) - newshiftarr[i]))
+        if ordbiga <= ord(char) <= 90:
+            if abs(ordbiga - ord(char)) < newshiftarr[indchar]:
+                if newshiftarr[indchar] > alphlen:
+                    a = newshiftarr[indchar] - newshiftarr[indchar] % alphlen
+                a = abs(ordbiga - (ord(char) - newshiftarr[indchar]))
                 arr.append(chr(90 - a + 1))
 
             else:
-                arr.append(chr(ord(char) - newshiftarr[i]))
-            i = i + 1
+                arr.append(chr(ord(char) - newshiftarr[indchar]))
 
-        elif 97 <= ord(char) <= 122:
-            if abs(97 - ord(char)) < newshiftarr[i]:
-                if newshiftarr[i] > 26:
-                    a = newshiftarr[i] - newshiftarr[i] % 26
-                a = abs(97 - (ord(char) - newshiftarr[i]))
+        elif ordbiga <= ord(char) <= 122:
+            if abs(ordsmalla - ord(char)) < newshiftarr[indchar]:
+                if newshiftarr[indchar] > alphlen:
+                    a = newshiftarr[indchar] - newshiftarr[indchar] % alphlen
+                a = abs(ordsmalla - (ord(char) - newshiftarr[indchar]))
                 arr.append(chr(122 - a + 1))
-                i = i + 1
+
             else:
-                arr.append(chr(ord(char) - newshiftarr[i]))
-                i = i + 1
+                arr.append(chr(ord(char) - newshiftarr[indchar]))
+
         else:
             arr.append(char)
-            i = i + 1
+        indchar = indchar + 1
+
+
     plaintext = "".join(arr)
     return plaintext

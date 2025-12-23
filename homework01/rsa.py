@@ -41,23 +41,21 @@ def multiplicative_inverse(e: int, phi: int) -> int:
     >>> multiplicative_inverse(7, 40)
     23
     """
+    a, b = e, phi
+    x0, x1, y0, y1 = 1, 0, 0, 1
 
-    def extended_gcd_iterative(a, b):
-        """Расширенный алгоритм Евклида без рекурсии"""
-        x0, x1, y0, y1 = 1, 0, 0, 1
+    while b != 0:
+        q = a // b
+        a, b = b, a % b
+        x0, x1 = x1, x0 - q * x1
+        y0, y1 = y1, y0 - q * y1
 
-        while b != 0:
-            q = a // b
-            a, b = b, a % b
-            x0, x1 = x1, x0 - q * x1
-            y0, y1 = y1, y0 - q * y1
+    inverse = x0 % phi
 
-        return a, x0, y0
+    return inverse
 
-    gcd, x, y = extended_gcd_iterative(e, phi)
 
-    d = x % phi
-    return d
+
 
 
 def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]:
