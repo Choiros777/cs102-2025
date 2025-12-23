@@ -251,7 +251,7 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     for i in range(len(positions) - 1, 0, -1):
         j = (i * 7) % (i + 1)
         positions[i], positions[j] = positions[j], positions[i]
-        
+
     if solved_grid is None:
         return empty_grid
     else:
