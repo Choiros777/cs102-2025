@@ -4,7 +4,6 @@ import typing as tp
 
 import pygame
 from pygame.locals import *
-import random
 
 Cell = tp.Tuple[int, int]
 Cells = tp.List[int]
@@ -29,8 +28,6 @@ class GameOfLife:
         # Текущее число поколений
         self.generations = 1
 
-
-
     def create_grid(self, randomize: bool = False) -> Grid:
 
         rows_count = self.rows
@@ -46,7 +43,6 @@ class GameOfLife:
             result.append(line)
 
         return result
-
 
     def get_neighbours(self, cell: Cell) -> Cells:
         # Copy from previous assignment
@@ -65,8 +61,6 @@ class GameOfLife:
 
         return neighbours
 
-
-
     def get_next_generation(self) -> Grid:
         new_grid = [[0 for _ in range(self.cols)] for _ in range(self.rows)]
 
@@ -76,7 +70,6 @@ class GameOfLife:
                 live_neighbours = sum(neighbours)
 
                 current_cell = self.curr_generation[row][col]
-
 
                 if current_cell == 1:
                     if live_neighbours in [2, 3]:
@@ -100,13 +93,15 @@ class GameOfLife:
         self.curr_generation = self.get_next_generation()
         self.generations += 1
 
-
     @property
     def is_max_generations_exceeded(self) -> bool:
         """
         Не превысило ли текущее число поколений максимально допустимое.
         """
+        if self.max_generations is None:
+            return False  # Unlimited generations, never exceeded
         return self.generations >= self.max_generations
+
 
     @property
     def is_changing(self) -> bool:
@@ -121,13 +116,13 @@ class GameOfLife:
         Прочитать состояние клеток из указанного файла.
         """
 
-        with open(filename, 'r') as f:
+        with open(filename, "r") as f:
             lines = f.readlines()
 
         rows = len(lines)
         cols = len(lines[0].strip()) if lines else 0
 
-        game = GameOfLife((rows, cols), randomize=False, max_generations=float('inf'))
+        game = GameOfLife((rows, cols), randomize=False, max_generations=float("inf"))
 
         grid = []
         for line in lines:
@@ -143,10 +138,7 @@ class GameOfLife:
         """
         Сохранить текущее состояние клеток в указанный файл.
         """
-        with open(filename, 'w') as f:
+        with open(filename, "w") as f:
             for row in self.curr_generation:
-                line = ''.join(str(cell) for cell in row)
-                f.write(line + '\n')
-
-
-
+                line = "".join(str(cell) for cell in row)
+                f.write(line + "\n")
