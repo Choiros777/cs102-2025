@@ -102,7 +102,6 @@ class GameOfLife:
             return False  # Unlimited generations, never exceeded
         return self.generations >= self.max_generations
 
-
     @property
     def is_changing(self) -> bool:
         """
