@@ -3,7 +3,6 @@ Game of Life GUI implementation using Pygame.
 Provides graphical interface for Conway's Game of Life.
 """
 
-# pylint: disable=no-member
 import pygame
 
 from life import GameOfLife
