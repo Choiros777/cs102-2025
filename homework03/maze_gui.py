@@ -1,4 +1,3 @@
-
 """
 code for drawing the labyrinth
 
@@ -9,10 +8,11 @@ from copy import deepcopy
 from tkinter import ttk
 from typing import List
 
-
-
 from homework03.maze import add_path_to_grid, bin_tree_maze, solve_maze
 
+GRID = None
+CELL_SIZE = 10
+canvas = None
 
 
 def draw_cell(x, y, color, size: int = 10):
@@ -47,7 +47,6 @@ def show_solution():
 
 
 if __name__ == "__main__":
-    global GRID, CELL_SIZE
     N, M = 51, 77
 
     CELL_SIZE = 10

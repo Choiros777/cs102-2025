@@ -4,6 +4,7 @@ from typing import List, Optional, Tuple, Union
 
 import pandas as pd
 
+
 def create_grid(rows: int = 15, cols: int = 15) -> List[List[Union[str, int]]]:
     return [["■"] * cols for _ in range(rows)]
 
@@ -14,23 +15,19 @@ def remove_wall(grid: List[List[Union[str, int]]], coord: Tuple[int, int]) -> Li
     :param coord:
     :return:
     """
+
     row, col = coord
     last_col_index = len(grid[0]) - 1
-
     selected_direction = choice(["up", "right"])
-
     if selected_direction == "up":
-
         can_go_up = row > 1
         if can_go_up:
             grid[row - 1][col] = " "
         else:
-
             can_go_right = col < last_col_index - 1
             if can_go_right:
                 grid[row][col + 1] = " "
     else:  # direction == "right"
-
         can_go_right = col < last_col_index - 1
         if can_go_right:
             grid[row][col + 1] = " "
@@ -38,18 +35,17 @@ def remove_wall(grid: List[List[Union[str, int]]], coord: Tuple[int, int]) -> Li
             can_go_up = row > 1
             if can_go_up:
                 grid[row - 1][col] = " "
-
     return grid
 
 
 def bin_tree_maze(rows: int = 15, cols: int = 15, random_exit: bool = True) -> List[List[Union[str, int]]]:
     """
+
     :param rows:
     :param cols:
     :param random_exit:
     :return:
     """
-
     grid = create_grid(rows, cols)
     empty_cells = []
     for x, row in enumerate(grid):
@@ -125,8 +121,9 @@ def shortest_path(
     :param exit_coord:
     :return:
     """
-    x, y = exit_coord
-    current_value = grid[x][y]
+
+    current_x, current_y = exit_coord
+    current_value = grid[current_x][current_y]
 
     if isinstance(current_value, str):
         try:
@@ -140,24 +137,29 @@ def shortest_path(
     path = [exit_coord]
 
     while current_value > 1:
-        found = False
-        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-            nx, ny = x + dx, y + dy
-            if 0 <= nx < len(grid) and 0 <= ny < len(grid[0]):
-                neighbor_value = grid[nx][ny]
+        neighbor_found = False
+
+        for direction_x, direction_y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            neighbor_x = current_x + direction_x
+            neighbor_y = current_y + direction_y
+
+            if 0 <= neighbor_x < len(grid) and 0 <= neighbor_y < len(grid[0]):
+                neighbor_value = grid[neighbor_x][neighbor_y]
+
                 if isinstance(neighbor_value, str):
                     try:
                         neighbor_value = int(neighbor_value)
                     except ValueError:
                         continue
-                if grid[nx][ny] == current_value - 1:
-                    path.append((nx, ny))
-                    x, y = nx, ny
+
+                if neighbor_value == current_value - 1:
+                    path.append((neighbor_x, neighbor_y))
+                    current_x, current_y = neighbor_x, neighbor_y
                     current_value -= 1
-                    found = True
+                    neighbor_found = True
                     break
 
-        if not found:
+        if not neighbor_found:
             return None
 
     return path
@@ -203,7 +205,6 @@ def solve_maze(
     :param grid:
     :return:
     """
-
     grid = deepcopy(grid)
     exits = get_exits(grid)
     if len(exits) == 1:
