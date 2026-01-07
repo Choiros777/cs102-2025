@@ -21,6 +21,8 @@ def draw_cell(x, y, color, size: int = 10):
     y *= size
     x1 = x + size
     y1 = y + size
+    if canvas is None:
+        raise ValueError("Canvas not initialized")
     canvas.create_rectangle(x, y, x1, y1, fill=color)
 
 
