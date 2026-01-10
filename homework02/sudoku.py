@@ -1,7 +1,10 @@
 import pathlib
+import random
 import typing as tp
 
 T = tp.TypeVar("T")
+
+VALUESET = set("123456789")
 
 
 def read_sudoku(path: tp.Union[str, pathlib.Path]) -> tp.List[tp.List[str]]:
@@ -37,10 +40,7 @@ def group(values: tp.List[T], n: int) -> tp.List[tp.List[T]]:
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    table = []
-    for i in range(0, len(values), n):
-        table.append(values[i : (i + n)])
-    return table
+    return [values[i : (i + n)] for i in range(0, len(values), n)]
 
 
 def get_row(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -65,10 +65,7 @@ def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    table = []
-    for i in range(0, len(grid)):
-        table.append(grid[i][pos[1]])
-    return table
+    return [grid[i][pos[1]] for i in range(len(grid))]
 
 
 def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -102,10 +99,10 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.Tuple[in
     >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
     (2, 0)
     """
-    for row in range(len(grid)):
-        for col in range(len(grid[row])):
-            if grid[row][col] == ".":
-                return (row, col)
+    for rowindx, row in enumerate(grid):
+        for colindx, value in enumerate(row):
+            if value == ".":
+                return (rowindx, colindx)
     return None
 
 
@@ -123,14 +120,10 @@ def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -
     row_values = set(get_row(grid, pos))
     col_values = set(get_col(grid, pos))
     block_values = set(get_block(grid, pos))
-
-    # Объединяем все занятые значения
     used_values = row_values.union(col_values).union(block_values)
 
-    # Все возможные значения в судоку
-    all_values = set("123456789")
+    all_values = VALUESET
 
-    # Возвращаем разность - возможные значения
     return all_values - used_values
 
 
@@ -149,22 +142,15 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
 
     empty_pos = find_empty_positions(grid)
 
-    if empty_pos is None:
+    if not empty_pos:
         return grid
-
     row, col = empty_pos
-
     possible_values = find_possible_values(grid, empty_pos)
-
     for value in possible_values:
-
         grid[row][col] = value
-
         solution = solve(grid)
-
-        if solution is not None:
+        if solution:
             return solution
-
         grid[row][col] = "."
 
     return None
@@ -173,27 +159,30 @@ def solve(grid: tp.List[tp.List[str]]) -> tp.Optional[tp.List[tp.List[str]]]:
 def check_solution(solution: tp.List[tp.List[str]]) -> bool:
     """Если решение solution верно, то вернуть True, в противном случае False"""
 
+    global VALUESET
     for row in solution:
         if "." in row:
             return False
 
     for i in range(9):
         row_values = get_row(solution, (i, 0))
-
-        if set(row_values) != set("123456789"):
+        if set(row_values) != VALUESET:
             return False
 
     for j in range(9):
         col_values = get_col(solution, (0, j))
-        if set(col_values) != set("123456789"):
+        if set(col_values) != VALUESET:
             return False
 
-    block_positions = [(1, 1), (1, 4), (1, 7), (4, 1), (4, 4), (4, 7), (7, 1), (7, 4), (7, 7)]
+    n = len(solution)
+    block_size = int(n**0.5)
+    offset = block_size // 2
 
-    for pos in block_positions:
-        block_values = get_block(solution, pos)
-        if set(block_values) != set("123456789"):
-            return False
+    for block_row in range(offset, n, block_size):
+        for block_col in range(offset, n, block_size):
+            block_values = get_block(solution, (block_row, block_col))
+            if set(block_values) != VALUESET:
+                return False
 
     return True
 
@@ -219,49 +208,34 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     >>> check_solution(solution)
     True
     """
-    empty_grid = [["." for _ in range(9)] for _ in range(9)]
+    empty = [["." for _ in range(9)] for _ in range(9)]
 
-    for block in range(3):
-        numbers = list("123456789")
-        for i in range(8, 0, -1):
+    allnums = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-            j = (i * 7) % (i + 1)
-            numbers[i], numbers[j] = numbers[j], numbers[i]
+    for i in range(3):
+        count = 0
+        block = random.sample(allnums, 9)
+        for row in range(3 * i, 3 * i + 3):
+            for column in range(3 * i, 3 * i + 3):
+                empty[row][column] = str(block[count])
+                count += 1
 
-        start_row = block * 3
-        start_col = block * 3
-        idx = 0
-        for i in range(3):
-            for j in range(3):
-                empty_grid[start_row + i][start_col + j] = numbers[idx]
-                idx += 1
+    solution = solve(empty)
+    if solution is None:
+        return empty
 
-    solved_grid = solve(empty_grid)
+    usedvalue = []
 
-    if N > 81:
-        N = 81
+    for i in range(81 - N):
+        while True:
+            num = random.randint(0, 8)
+            num2 = random.randint(0, 8)
+            if (num, num2) not in usedvalue:
+                usedvalue.append((num, num2))
+                solution[num][num2] = "."
+                break
 
-    empty_cells = 81 - N
-
-    positions = []
-    for i in range(9):
-        for j in range(9):
-            positions.append((i, j))
-
-    for i in range(len(positions) - 1, 0, -1):
-        j = (i * 7) % (i + 1)
-        positions[i], positions[j] = positions[j], positions[i]
-
-    if solved_grid is None:
-        return empty_grid
-    else:
-        result_grid = [row[:] for row in solved_grid]
-
-    for idx in range(min(empty_cells, len(positions))):
-        row, col = positions[idx]
-        result_grid[row][col] = "."
-
-    return result_grid
+    return solution
 
 
 if __name__ == "__main__":
