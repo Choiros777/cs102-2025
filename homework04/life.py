@@ -71,16 +71,12 @@ class GameOfLife:
 
                 current_cell = self.curr_generation[row][col]
 
-                if current_cell == 1:
-                    if live_neighbours in [2, 3]:
-                        new_grid[row][col] = 1
-                    else:
-                        new_grid[row][col] = 0
+                if (current_cell == 1 and live_neighbours not in [2, 3]) or (
+                    current_cell == 0 and live_neighbours != 3
+                ):
+                    new_grid[row][col] = 0
                 else:
-                    if live_neighbours == 3:
-                        new_grid[row][col] = 1
-                    else:
-                        new_grid[row][col] = 0
+                    new_grid[row][col] = 1
 
         return new_grid
 

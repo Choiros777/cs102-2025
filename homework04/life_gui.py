@@ -4,6 +4,7 @@ Provides graphical interface for Conway's Game of Life.
 """
 
 import pygame
+
 from life import GameOfLife
 from ui import UI
 
