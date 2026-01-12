@@ -15,26 +15,21 @@ def remove_wall(grid: List[List[Union[str, int]]], coord: Tuple[int, int]) -> Li
     :param coord:
     :return:
     """
+    x, y = coord
+    rows, cols = len(grid), len(grid[0])
 
-    row, col = coord
-    last_col_index = len(grid[0]) - 1
-    selected_direction = choice(["up", "right"])
-    if selected_direction == "up":
-        can_go_up = row > 1
-        if can_go_up:
-            grid[row - 1][col] = " "
-        else:
-            can_go_right = col < last_col_index - 1
-            if can_go_right:
-                grid[row][col + 1] = " "
-    else:  # direction == "right"
-        can_go_right = col < last_col_index - 1
-        if can_go_right:
-            grid[row][col + 1] = " "
-        else:
-            can_go_up = row > 1
-            if can_go_up:
-                grid[row - 1][col] = " "
+    direction = choice(["up", "right"])
+
+    if direction == "up":
+        if x >= 2:
+            grid[x - 1][y] = " "
+        elif y <= cols - 3:
+            grid[x][y + 1] = " "
+    else:
+        if y <= cols - 3:
+            grid[x][y + 1] = " "
+        elif x >= 2:
+            grid[x - 1][y] = " "
     return grid
 
 
@@ -125,11 +120,10 @@ def shortest_path(
     current_x, current_y = exit_coord
     current_value = grid[current_x][current_y]
 
-    if isinstance(current_value, str):
-        try:
-            current_value = int(current_value)
-        except ValueError:
-            return None
+    try:
+        current_value = int(current_value)
+    except ValueError:
+        return None
 
     if current_value == 1:
         return [exit_coord]
@@ -146,11 +140,10 @@ def shortest_path(
             if 0 <= neighbor_x < len(grid) and 0 <= neighbor_y < len(grid[0]):
                 neighbor_value = grid[neighbor_x][neighbor_y]
 
-                if isinstance(neighbor_value, str):
-                    try:
-                        neighbor_value = int(neighbor_value)
-                    except ValueError:
-                        continue
+                try:
+                    neighbor_value = int(neighbor_value)
+                except ValueError:
+                    continue
 
                 if neighbor_value == current_value - 1:
                     path.append((neighbor_x, neighbor_y))
@@ -212,10 +205,10 @@ def solve_maze(
     for possible_exit in exits:
         if encircled_exit(grid, possible_exit):
             return grid, None
-    for x in range(len(grid)):
-        for y in range(len(grid[0])):
-            if grid[x][y] == " ":
-                grid[x][y] = 0
+    for row_idx, row in enumerate(grid):
+        for col_idx, cell in enumerate(row):
+            if cell == " ":
+                grid[row_idx][col_idx] = 0
     x_enter, y_enter = exits[0]
     grid[x_enter][y_enter] = 1
     x_exit, y_exit = exits[1]
