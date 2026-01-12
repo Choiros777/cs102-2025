@@ -224,7 +224,7 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
                 count += 1
 
     solution = solve(empty)
-    if solution is None:
+    if not solution:
         return empty
 
     all_positions = [(row, col) for row in range(9) for col in range(9)]
