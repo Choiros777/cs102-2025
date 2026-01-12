@@ -65,7 +65,8 @@ def get_col(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str
     >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
     ['3', '6', '9']
     """
-    return [grid[i][pos[1]] for i in range(len(grid))]
+    _, col = pos
+    return [row[col] for row in grid]
 
 
 def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[str]:
@@ -209,8 +210,10 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     True
     """
     empty = [["." for _ in range(9)] for _ in range(9)]
+    N = max(0, min(N, 81))
 
-    allnums = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    myrange = range(1,10)
+    allnums = list(myrange)
 
     for i in range(3):
         count = 0
@@ -224,16 +227,12 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     if solution is None:
         return empty
 
-    usedvalue = []
+    all_positions = [(row, col) for row in range(9) for col in range(9)]
 
-    for i in range(81 - N):
-        while True:
-            num = random.randint(0, 8)
-            num2 = random.randint(0, 8)
-            if (num, num2) not in usedvalue:
-                usedvalue.append((num, num2))
-                solution[num][num2] = "."
-                break
+    positions_to_remove = random.sample(all_positions, 81 - N)
+
+    for row, col in positions_to_remove:
+        solution[row][col] = "."
 
     return solution
 
