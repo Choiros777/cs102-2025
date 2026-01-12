@@ -227,6 +227,7 @@ def generate_sudoku(N: int) -> tp.List[tp.List[str]]:
     if not solution:
         return empty
 
+
     all_positions = [(row, col) for row in range(9) for col in range(9)]
 
     positions_to_remove = random.sample(all_positions, 81 - N)
