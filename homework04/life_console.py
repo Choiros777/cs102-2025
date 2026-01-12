@@ -82,3 +82,4 @@ if __name__ == "__main__":
     game = GameOfLife(size=(30, 30), randomize=True)
     consoleup = Console(game)
     consoleup.run()
+#C:/Users/DEXPAQUILONC14-ICW40/.virtualenvs/cs102/Scripts/python.exe life_console.py
